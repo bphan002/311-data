@@ -8,6 +8,7 @@ import {
   updateStartDate as reduxUpdateStartDate,
   updateEndDate as reduxUpdateEndDate,
 } from '@reducers/filters';
+import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import options from './options';
@@ -42,7 +43,20 @@ function DateSelector({
     <>
       <span className={classes.label}>
         Date Range&nbsp;
-        <Tooltip title="311-Data is currently only able to load 311 service request data in 2024 and onwards. For updates on the release of available 311 Data, please follow our LinkedIn page at https://www.linkedin.com/company/hack-for-la/.">
+        <Tooltip
+          placement="top-end"
+          title={
+              <div className={`${classes.tooltip} ${classes.trirightbtmleft}`}>
+                  <p className={`${classes.boldWord} ${classes.tooltipSentMargin}`}>Currently, 311-Data loads only 311 service request data from 2024 onward.</p>
+                  <p className={classes.tooltipSentMargin}>For updates on the release of available 311 Data, please follow our {` `}
+                    <a href="https://www.linkedin.com/company/hack-for-la/">
+                      LinkedIn Page
+                    </a>
+                  .
+                  </p>                  
+              </div>
+          }
+        >
           <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
         </Tooltip>
       </span>
