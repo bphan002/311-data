@@ -59,6 +59,10 @@ function DateSelector({
         >
           <InfoOutlinedIcon className={classes.iconStyle} fontSize="inherit" />
         </Tooltip>
+        <Tooltip
+        >
+            <p>hiiiiiiiii</p>
+        </Tooltip>
       </span>
       <SelectorBox onToggle={() => setExpanded(!expanded)} expanded={expanded}>
         <SelectorBox.Display>
