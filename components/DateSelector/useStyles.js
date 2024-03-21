@@ -1,14 +1,10 @@
 import makeStyles from '@mui/styles/makeStyles';
-import fonts from '@theme/fonts';
 
 const useStyles = makeStyles(theme => ({
   label: {
     marginBottom: 5,
     display: 'inline-block',
     fontFamily: 'Roboto',
-  },
-  boldWord: {
-    fontWeight: fonts.weight.bold,
   },
   selector: {
     fontFamily: 'Roboto',
@@ -44,29 +40,8 @@ const useStyles = makeStyles(theme => ({
   selected: {
     backgroundColor: `${theme.palette.selected.primary} !important`,
   },
-  tooltip: {
-    backgroundColor: 'white',
-    color: 'black',
-    borderRadius: '2px',
-    padding: '5px 10px',
-    margin: '-5px -10px 2px -5px',
-    position: 'relative',
-    fontSize: '12px',
-  },
-  tooltipSentMargin: {
-    margin: '0px 0px',
-    padding: '0px',
-  },
-  trirightbtmleft: {
-    '&::after': {
-    content: "''",
-    position: 'absolute',
-    left: '0px',
-    top: '50px',
-    border: '22px solid',
-    borderColor: 'transparent transparent transparent white',
-    zIndex: -1,
-    }
+  tooltipParagraph: {
+    margin: '1px',
   },
 }));
 
