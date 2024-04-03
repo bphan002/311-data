@@ -56,11 +56,11 @@ function DateSelector({
             <p className={classes.tooltipParagraph}>
               For updates on the release of available 311
               Data, please follow our
-              {` `}
+              {' '}
               <a href='https://www.linkedin.com/company/hack-for-la/'>
                 LinkedIn Page
               </a>
-            .
+              .
             </p>
           </div>
         )
