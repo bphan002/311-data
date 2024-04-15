@@ -64,6 +64,12 @@ function StyledChip({
       size="small"
       variant={outlined ? 'outlined' : 'default'}
       clickable={false}
+      // sx={{
+      //   height: 'auto',
+      //   '& .MuiChip-label': {
+      //     whiteSpace: 'normal',
+      //   },
+      // }}
     />
   );
 }
