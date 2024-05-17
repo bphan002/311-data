@@ -35,6 +35,7 @@ export function removeGeoHoles(feature) {
 }
 
 export function makeGeoCircle(center, radius = 1, opts = { units: 'miles' }) {
+  console.log('make circles')
   return circle([center.lng, center.lat], radius, opts);
 }
 

@@ -1,10 +1,11 @@
 /* eslint-disable */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { INTERNAL_DATE_SPEC } from '../../common/CONSTANTS';
 import moment from 'moment';
+import DbContext from '@db/DbContext';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
@@ -87,16 +88,24 @@ function dateFilter(startDate, endDate) {
 }
 
 class RequestsLayer extends React.Component {
+  static contextType = DbContext
   constructor(props) {
     super(props);
     this.ready = false;
   }
 
+  
   init = ({ map }) => {
+    console.log('contextType', this.context.startTime)
+    // console.log('context valueeeee outside ', this.contextValue)
     this.map = map;
     this.addSources();
     this.addLayers();
+    console.log("this.addLayers", this.addLayers)
     this.ready = true;
+    const mapEndTime = performance.now()
+    console.log('map end time in init', mapEndTime)
+    // console.log(`Time from the start of the map load to pin time: ${Math.floor(mapEndTime - mapStart)} ms.`);
   };
 
   componentDidUpdate(prev) {
@@ -109,6 +118,10 @@ class RequestsLayer extends React.Component {
       startDate,
       endDate,
     } = this.props;
+
+    console.log('waht is prev', prev)
+    console.log("what is props here", this.props)
+
 
     if (activeLayer !== prev.activeLayer) this.setActiveLayer(activeLayer);
 
@@ -173,7 +186,7 @@ class RequestsLayer extends React.Component {
               [15, 10],
             ],
           },
-          'circle-color': circleColors(requestTypes),
+          'circle-color': 'red',
           'circle-opacity': 0.8,
         },
         filter: this.getFilterSpec(
@@ -251,6 +264,8 @@ class RequestsLayer extends React.Component {
   };
 
   setRequests = (requests) => {
+    // requets is an object that has properties type, and features
+    //propeties features has a bunch of array in it
     this.map.getSource('requests').setData(requests);
   };
 

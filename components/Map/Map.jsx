@@ -49,6 +49,8 @@ import { debounce, isEmpty } from '@utils';
 
 import settings from '@settings';
 
+// import getMapStartTime from '../../utils/performanceTime';
+
 const styles = (theme) => ({
   root: {
     position: 'absolute',
@@ -139,7 +141,7 @@ class Map extends React.Component {
   componentDidMount() {
     this.isSubscribed = true;
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-
+   
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: MAP_STYLES[this.state.mapStyle],
@@ -172,6 +174,8 @@ class Map extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('prev props', prevProps)
+    console.log('prevState', prevState)
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
@@ -219,6 +223,7 @@ class Map extends React.Component {
             });
           },
           onHoverRegion: (geo) => {
+            console.log('hiiii', geo)
             this.setState({
               hoveredRegionName: geo
                 ? ncNameFromId(geo.properties.nc_id)
@@ -582,6 +587,8 @@ class Map extends React.Component {
 
   getDistrictCounts = (geoFilterType, filterGeo, selectedTypes) => {
     const { ncCounts, ccCounts } = this.props;
+    console.log('ncCounts', ncCounts)
+    console.log('ccCounts', ccCounts)
     const { counts, regionId } = (() => {
       switch (geoFilterType) {
         case GEO_FILTER_TYPES.nc:
@@ -608,6 +615,7 @@ class Map extends React.Component {
 
   setFilteredRequestCounts = () => {
     const { requests, filterGeo, geoFilterType, selectedTypes } = this.state;
+    console.log('filter geo', filterGeo)
     const { ncCounts, ccCounts } = this.props;
 
     // use pre-calculated values for nc and cc filters if available

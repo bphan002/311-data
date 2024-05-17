@@ -76,6 +76,7 @@ class MapSearch extends React.Component {
 
   componentDidMount() {
     const { map } = this.props;
+    console.log('what is in this.props', this.props)
 
     this.geocoder = new MapboxGeocoder({
       accessToken: process.env.MAPBOX_TOKEN,

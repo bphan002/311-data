@@ -43,10 +43,8 @@ class MapContainer extends React.Component {
   // Note: 'this.context' is defined using the static contextType property
   // static contextType assignment allows MapContainer to access values provided by DbContext.Provider
   static contextType = DbContext;
-
   constructor(props) {
     super(props);
-
     this.state = {
       ncCounts: null,
       ccCounts: null,
@@ -77,8 +75,10 @@ class MapContainer extends React.Component {
     const createSQL =
       `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
-    const startTime = performance.now(); // start the time tracker
-
+    const { startTime, setStartTime } = this.context
+    setStartTime(performance.now())
+    console.log('what is the performance time should match the oter file', performance.now())
+    console.log('startTimess', startTime)
       try {
         await conn.query(createSQL);
         const endTime = performance.now() // end the timer
@@ -317,6 +317,7 @@ class MapContainer extends React.Component {
     const { conn } = this.context;
     const startYear = moment(startDate).year();
     const endYear = moment(endDate).year();
+    console.log('conn', conn)
 
     let selectSQL = '';
 
@@ -343,8 +344,8 @@ class MapContainer extends React.Component {
       const requestsAsArrowTable = await conn.query(selectSQL);
       const dataLoadEndTime = performance.now();
 
-      console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
-
+      // console.log(`Data loading time: ${Math.floor(dataLoadEndTime - dataLoadStartTime)} ms`);
+      console.log('ddbh', ddbh)
       const requests = ddbh.getTableData(requestsAsArrowTable);
       const mapLoadEndTime = performance.now();
 
@@ -367,15 +368,20 @@ class MapContainer extends React.Component {
     dispatchGetDataRequest(); // set isMapLoading in redux stat.data to true
     dispatchGetDbRequest(); // set isDbLoading in redux state.data to true
     this.rawRequests = await this.getAllRequests(startDate, endDate);
-
+    
     if (this.isSubscribed) {
       const {
         dispatchGetDataRequestSuccess,
         dispatchGetDbRequestSuccess,
         dispatchUpdateDateRanges,
       } = this.props;
+      console.log('what is the raw request', this.rawRequests)
       const convertedRequests = this.convertRequests(this.rawRequests);
+      // console.log('what is this convertedRequests', convertedRequests)
+      // console.log('typeof', convertedRequests)
+      // console.log('is this an array',Array.isArray(convertedRequests))
       // load map features/requests upon successful map load
+      console.log('function', dispatchGetDataRequestSuccess)
       dispatchGetDataRequestSuccess(convertedRequests);
       // set isDbLoading in redux state.data to false
       dispatchGetDbRequestSuccess();
@@ -385,8 +391,9 @@ class MapContainer extends React.Component {
     }
   };
 
-  convertRequests = (requests) =>
+  convertRequests = (requests) =>  
     requests.map((request) => {
+      // console.log('request', request); // Logging each request
       // Be careful, request properties are case-sensitive
       return {
         type: 'Feature',

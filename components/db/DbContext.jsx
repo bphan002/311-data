@@ -5,6 +5,7 @@ const DbContext = React.createContext({
   conn: null,
   worker: null,
   tableNameByYear: '',
+  startTime: 0,
 });
 
 export default DbContext;

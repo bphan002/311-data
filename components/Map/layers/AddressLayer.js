@@ -52,6 +52,7 @@ class AddressLayer extends React.Component {
     this.addImages();
     this.addSources();
     this.addLayers();
+    console.log("this.geeoson.features",this.geojson.features)
 
     if (addListeners) {
       this.addListeners();

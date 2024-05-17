@@ -1,3 +1,4 @@
+// action type constants
 export const types = {
   GET_DB_REQUEST: 'GET_DB_REQUEST',
   GET_DB_REQUEST_SUCCESS: 'GET_DB_REQUEST_SUCCESS',
@@ -26,6 +27,7 @@ export const types = {
   GIT_RESPONSE_FAILURE: 'GIT_RESPONSE_FAILURE',
 };
 
+//  these are action creator functions
 export const getDbRequest = () => ({
   type: types.GET_DB_REQUEST,
 });
@@ -39,10 +41,13 @@ export const getDataRequest = () => ({
   type: types.GET_DATA_REQUEST,
 });
 
-export const getDataRequestSuccess = response => ({
-  type: types.GET_DATA_REQUEST_SUCCESS,
-  payload: response,
-});
+export const getDataRequestSuccess = response => {
+  console.log('Payload of response here:', response); // Log the payload
+  return {
+    type: types.GET_DATA_REQUEST_SUCCESS,
+    payload: response,
+  };
+};
 
 export const updateDateRanges = dateRanges => ({
   type: types.UPDATE_DATE_RANGES,
@@ -146,6 +151,7 @@ const initialState = {
   dateRangesWithRequests: [],
 };
 
+//  this is the reducer
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.GET_DB_REQUEST:
@@ -165,6 +171,8 @@ export default (state = initialState, action) => {
         isMapLoading: true,
       };
     case types.GET_DATA_REQUEST_SUCCESS: {
+      console.log('is this being hit?');
+      console.log('action payload', action.payload);
       const newRequests = {
         type: 'FeatureCollection',
         features: [...state.requests.features, ...action.payload],
