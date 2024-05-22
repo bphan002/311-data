@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { INTERNAL_DATE_SPEC } from '../../common/CONSTANTS';
 import moment from 'moment';
+import DbContext from '@db/DbContext';
 
 // put layer underneath this layer (from original mapbox tiles)
 // so you don't cover up important labels
@@ -87,6 +88,7 @@ function dateFilter(startDate, endDate) {
 }
 
 class RequestsLayer extends React.Component {
+  static contextType = DbContext
   constructor(props) {
     super(props);
     this.ready = false;
@@ -94,9 +96,13 @@ class RequestsLayer extends React.Component {
 
   init = ({ map }) => {
     this.map = map;
+    const startTime = this.context.startTime
     this.addSources();
     this.addLayers();
     this.ready = true;
+    const endTime = performance.now()
+    // console.log('pin loading timessssss', performance.now())
+    // console.log(`Dataset registration to table creation to pin render time: ${Math.floor(endTime - startTime)} ms.`);
   };
 
   componentDidUpdate(prev) {
@@ -158,6 +164,7 @@ class RequestsLayer extends React.Component {
     } = this.props;
 
     this.map.addLayer(
+      // console.log('inside add layer'),
       {
         id: 'request-circles',
         type: 'circle',
@@ -167,13 +174,13 @@ class RequestsLayer extends React.Component {
         },
         paint: {
           'circle-radius': {
-            base: 1.75,
+            base: 10,
             stops: [
               [10, 2],
               [15, 10],
             ],
           },
-          'circle-color': circleColors(requestTypes),
+          'circle-color': circleColors(requestTypes), 
           'circle-opacity': 0.8,
         },
         filter: this.getFilterSpec(
@@ -183,9 +190,9 @@ class RequestsLayer extends React.Component {
           endDate
         ),
       },
-      BEFORE_ID
+      BEFORE_ID,
     );
-
+    console.log('this is in request layer when all are drawn')
     // this.map.addLayer({
     //   id: 'request-heatmap',
     //   type: 'heatmap',

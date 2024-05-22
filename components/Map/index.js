@@ -77,7 +77,10 @@ class MapContainer extends React.Component {
     const createSQL =
       `CREATE TABLE IF NOT EXISTS ${tableNameByYear} AS SELECT * FROM "${datasetFileName}"`; // query from parquet
 
+    const { setStartTime } = this.context
     const startTime = performance.now(); // start the time tracker
+    setStartTime(startTime)
+    console.log('startTime in index.js', startTime)
 
       try {
         await conn.query(createSQL);
@@ -347,7 +350,7 @@ class MapContainer extends React.Component {
 
       const requests = ddbh.getTableData(requestsAsArrowTable);
       const mapLoadEndTime = performance.now();
-
+      console.log("mapLoadEndTime i think should be less than pins", mapLoadEndTime)
       console.log(`Map loading time: ${Math.floor(mapLoadEndTime - dataLoadEndTime)} ms`);
 
       return requests;

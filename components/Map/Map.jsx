@@ -35,6 +35,7 @@ import { pointsWithinGeo, getNcByLngLatv2 } from './geoUtils';
 import RequestsLayer from './layers/RequestsLayer';
 import BoundaryLayer from './layers/BoundaryLayer';
 import AddressLayer from './layers/AddressLayer';
+import DbContext from '@db/DbContext';
 
 // import MapOverview from './controls/MapOverview';
 
@@ -97,12 +98,13 @@ const styles = (theme) => ({
     top: '20px',
   },
 });
-
+// console.log('what is contained in requests layer', RequestsLayer)
 // Define feature layers
 const hoverables = ['nc-fills', 'cc-fills'];
 const featureLayers = ['request-circles', ...hoverables];
 
 class Map extends React.Component {
+  static contextType = DbContext;
   constructor(props) {
     super(props);
 
@@ -150,7 +152,8 @@ class Map extends React.Component {
       touchZoomRotate: false,
     });
 
-    map.on('load', () => {
+    map.on('load', (e) => {
+      
       if (this.isSubscribed) {
         this.initLayers(true);
 
@@ -160,6 +163,11 @@ class Map extends React.Component {
 
         map.once('idle', (e) => {
           this.setState({ mapReady: true });
+          // console.log("______________map is done loading!@#$!@#@!#!@#!@#@!#@!!!")
+        });
+
+        map.once('idle', (e) => {
+          console.log("______________map is done loading!@#$!@#@!#!@#!@#@!#@!!!")
         });
       }
     });
@@ -175,26 +183,76 @@ class Map extends React.Component {
     if (this.props.requests != prevProps.requests) {
       if (this.state.mapReady) {
         this.setState({ requests: this.props.requests });
-        // this.map.once('idle', this.setFilteredRequestCounts);
+        // console.log('this should appear at end in component did update');
       } else {
         this.map.once('idle', () => {
           this.setState({ requests: this.props.requests });
           // this.map.once('idle', this.setFilteredRequestCounts);
         });
+        
+      }
+      // console.log('this should appear at end once compoent did update');
+    }
+
+    const handleMapIdle = () => {
+      // Check if the 'requests' source is fully loaded
+      if (this.map.isSourceLoaded('requests')) {
+          console.log("Layer has fully loaded");
+          
+          // // Remove the event listener after the layer has fully loaded if you want it to run only once
+          this.map.off('idle', handleMapIdle);
       }
     }
+      if (this.props.requests !== prevProps.requests) {
+      // if (this.props.requests !== prevProps.requests && this.map) {
+        // // Remove any existing event listener to avoid memory leaks
+        // this.map.off('idle', handleMapIdle);
+
+        // Add a new event listener for the 'idle' event
+        this.map.on('idle', handleMapIdle);
+    }
+
+    
+    // const mapReady = () => {
+    //   // if (this.props.features?.requests) {
+    //     console.log('this.context', this.context.currYear)
+    //     this.context.currYear = '5'
+        
+    //   if (this.context.currYear == '5' && this.state.mapReady) {
+    //     console.log('lets see this', this.props.requests.features)
+    //     console.log("performance now", performance.now())
+    //   }
+    // }
+    // this.map.once('idle', mapReady)
+    
 
     // if (this.props.requestTypes != prevProps.requestTypes) {
     //   this.requestsLayer.init({
     //     map: this.map,
     //   });
     // }
+
+ 
     this.map.on('load', () => {
+      // console.log('pins rendered complete update', performance.now())
       if (
         this.state.filterGeo !== prevState.filterGeo ||
         this.state.selectedTypes !== prevState.selectedTypes
       )
-        this.map.once('idle', this.setFilteredRequestCounts);
+        this.map.once('idle',  this.setFilteredRequestCounts);
+      // console.log("this.props", this.props)
+      console.log('what is prevProps', prevProps.requests )
+      console.log('what is curr props', this.props.requests )
+      
+      
+      if (this.props.requests == prevProps.requests) {
+        // this.requestsLayer.once('idle', () => {
+        //   console.log('this should appear at end')
+        // })
+      }
+      // if (this.prevProps.requestsLayer !== this.props.requestsLayer) {
+      //   this.map.once('idle', () => console.log('this should hit at end'))
+      // }
 
       if (this.props.ncBoundaries != prevProps.ncBoundaries) {
         this.ncLayer.init({
@@ -299,9 +357,12 @@ class Map extends React.Component {
         }),
     });
 
+    // console.log('this.map in map', this.map)
+    // console.log("what is this requestlyaer", this.requestsLayer)
     this.requestsLayer.init({
       map: this.map,
     });
+    // console.log('this.map in map', this.map)
 
     this.ccLayer.init({
       map: this.map,
@@ -653,6 +714,7 @@ class Map extends React.Component {
   //// RENDER ////
 
   render() {
+    // console.log('----------requestdetail',this.requestsLayer, 'time', performance.now());
     const {
       pinsInfo,
       getPinInfo,
@@ -679,6 +741,7 @@ class Map extends React.Component {
     } = this.state;
 
     const { classes } = this.props;
+
 
     return (
       <div className={classes.root} ref={(el) => (this.mapContainer = el)}>
