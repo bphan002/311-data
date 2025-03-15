@@ -87,3 +87,49 @@ Public data used in this project:
 - [CSV and parquet datasets are also available here at huggingface.co](https://huggingface.co/311-data)
 
 The source code for this project is based on the original 311-Data [v2-aws](https://github.com/hackforla/311-data/releases/tag/v2-aws) release.
+
+
+### Vitest
+    - There are other popular testing frameworks such as Jest. Since we use Vite for our project, Vitest takes less configuration than if we used other framework.
+    - Vitest natively supports ES modules, while Jest needs to transform ES6 into modern JS format before testing and can lead to slower testing.
+    - Vitest handles Typescript natively if we ever decide to move in that direction.
+    - Vitest supports the modern "import/export" syntax, while Jest uses the "require" syntax.
+    - Since Jest is a popular testing framework, Vitest is compatible with Jest syntax for people that are already familiar with Jest. 
+    - Vitest has hot model reloading for its testing and provides a better developer experience
+
+## Example of Unit Testing
+     ```js
+     export function sum(a, b) {
+       return a + b;
+     }
+
+    describe('sum function', () => {
+      it('adds two numbers correctly', () => {
+        expect(sum(2, 3)).toBe(5);
+        expect(sum(-1, 1)).toBe(0);
+        expect(sum(0, 0)).toBe(0);
+      });
+    });
+```
+```
+
+## Example Benchmark Testing
+```
+describe('sort', () => {
+  bench('normal', () => {
+    const x = [1, 5, 4, 2, 3]
+    x.sort((a, b) => {
+      return a - b
+    })
+  })
+
+  bench('reverse', () => {
+    const x = [1, 5, 4, 2, 3]
+    x.reverse().sort((a, b) => {
+      return a - b
+    })
+  })
+})
+```
+    
+    

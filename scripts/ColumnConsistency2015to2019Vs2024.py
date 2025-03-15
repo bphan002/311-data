@@ -15,7 +15,7 @@ Key Features:
 - Compares column structures of historical datasets against the 2024 dataset.
 - Identifies missing and additional columns in each year.
 
-Time to execute: 
+Time to execute: ``
 - Due to multiple API calls the code might take time to execute 
 --------------------------------------------------------------------------------
 """
